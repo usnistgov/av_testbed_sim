@@ -25,4 +25,5 @@ Ubuntu
 - Update to the latest version:
 
    .. code-block:: bash
+      
       pip install mayavi -U
