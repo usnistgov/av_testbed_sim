@@ -11,4 +11,4 @@ Contents
 .. toctree::
 
    home
-   usage
+   installation
