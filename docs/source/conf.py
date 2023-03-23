@@ -2,7 +2,7 @@
 
 # -- Project information
 
-project = 'AV Simulation Testbed'
+project = 'AV Testbed Simulation'
 copyright = '2023, NIST'
 author = 'Z. Kootbally'
 
