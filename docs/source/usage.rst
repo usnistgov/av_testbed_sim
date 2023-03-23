@@ -6,29 +6,45 @@ Usage
 Installation
 ------------
 
-To use Lumache, first install it using pip:
+Template for the Read the Docs tutorial
+=======================================
 
-.. code-block:: console
+This GitHub template includes fictional Python library
+with some basic Sphinx docs.
 
-   (.venv) $ pip install lumache
+Read the tutorial here:
 
-Creating recipes
-----------------
+https://docs.readthedocs.io/en/stable/tutorial/
 
-To retrieve a list of random ingredients,
-you can use the ``lumache.get_random_ingredients()`` function:
 
-.. autofunction:: lumache.get_random_ingredients
+av_testbed_sim
+===============
+Simulation software for the AV testbed
 
-The ``kind`` parameter should be either ``"meat"``, ``"fish"``,
-or ``"veggies"``. Otherwise, :py:func:`lumache.get_random_ingredients`
-will raise an exception.
+Installation
+------------
 
-.. autoexception:: lumache.InvalidKindError
+Carla
+^^^^^^
 
-For example:
+Follow the instructions on the `Carla website <https://carla.readthedocs.io/en/latest/start_quickstart/>`_.
 
->>> import lumache
->>> lumache.get_random_ingredients()
-['shells', 'gorgonzola', 'parsley']
+- Use the Debian installation
 
+Mayavi
+^^^^^^^
+
+Mayavi is a 3D visualization tool for Python. It is used to visualize the simulation environment. 
+
+Ubuntu
+~~~~~~~
+
+Follow the instructions on the `Mayavi website <https://docs.enthought.com/mayavi/mayavi/installation.html#installing-ready-made-distributions>`_.
+
+Update to the latest version:
+
+
+
+```bash
+pip install mayavi -U
+```
