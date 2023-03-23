@@ -108,6 +108,10 @@ def generate_lidar_bp(arg, world, blueprint_library, delta):
 def carlaEventLoop(world, vehicle):
     frame = 0
     dt0 = datetime.now()
+    spectator = world.get_spectator()
+    camera_collision_bp = world.get_blueprint_library().find('sensor.other.collision')
+    camera_transform = carla.Transform(carla.Location(x=-5, z=3))
+    camera_collision = world.spawn_actor(camera_collision_bp, camera_transform, attach_to=vehicle)
     while True:
         time.sleep(0.005)
         world.tick()
@@ -118,15 +122,7 @@ def carlaEventLoop(world, vehicle):
         dt0 = datetime.now()
         frame += 1
         
-        
-        spectator = world.get_spectator()
-        transform = vehicle.get_transform()
-        location = carla.Location(x=transform.location.x, y=transform.location.y, z=30)
-        
-        # spectator.set_transform(
-        #     carla.Transform(location, carla.Rotation(yaw=vehicle.get_transform().rotation.yaw, pitch=-90.0)))
-        spectator.set_transform(carla.Transform(transform.location + carla.Location(x=0, y=0, z=1.3),
-                                                    carla.Rotation(yaw=vehicle.get_transform().rotation.yaw)))
+        spectator.set_transform(camera_collision.get_transform())
 
 
 def main(arg):
@@ -134,6 +130,7 @@ def main(arg):
     client = carla.Client(arg.host, arg.port)
     client.set_timeout(2.0)
     world = client.get_world()
+    client.load_world("Town01")
 
     try:
         original_settings = world.get_settings()
@@ -152,22 +149,25 @@ def main(arg):
         vehicle_bp = blueprint_library.filter(arg.filter)[0]
         vehicle_transform = random.choice(world.get_map().get_spawn_points())
         vehicle = world.spawn_actor(vehicle_bp, vehicle_transform)
-        # vehicle.set_autopilot(arg.no_autopilot)
-        vehicle.set_autopilot(True)
+        vehicle.set_autopilot(arg.no_autopilot)
+        # vehicle.global_percentage_speed_difference = 2
+        # vehicle.set_autopilot(True)
         
+        # use a collision sensor only to attach a spectator to the camera
         
+        # camera_collision = None
+        
+        # Lidar sensor setup
         lidar_bp = generate_lidar_bp(arg, world, blueprint_library, delta)
-
         user_offset = carla.Location(arg.x, arg.y, arg.z)
         lidar_transform = carla.Transform(carla.Location(x=-0.5, z=1.8) + user_offset)
-
         lidar = world.spawn_actor(lidar_bp, lidar_transform, attach_to=vehicle)
-
         fig = mlab.figure(size=(960, 540), bgcolor=(0.05, 0.05, 0.05))
         vis = mlab.points3d(0, 0, 0, 0, mode='point', figure=fig)
         mlab.view(distance=25)
         buf = {'pts': np.zeros((1, 3)), 'intensity': np.zeros(1)}
-
+        
+       
         #  @mlab.animate(delay=100)
         def anim():
             i = 0
@@ -177,9 +177,10 @@ def main(arg):
                     y=buf['pts'][:, 1],
                     z=buf['pts'][:, 2],
                     scalars=buf['intensity'])
-                # mlab.savefig(filename=f'test{i}.png', figure=fig)
+                mlab.savefig(filename=f'test{i}.png', figure=fig)
+                # mlab.draw(figure=fig)
                 time.sleep(0.1)
-                i += 1
+                # i += 1
 
         if arg.semantic:
             lidar.listen(lambda data: semantic_lidar_callback(data, buf))
@@ -189,7 +190,7 @@ def main(arg):
         loopThread = threading.Thread(target=carlaEventLoop, args=[world, vehicle], daemon=True)
         loopThread.start()
         anim()
-        #  mlab.show()
+        # mlab.show()
 
     finally:
         world.apply_settings(original_settings)

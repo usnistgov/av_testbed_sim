@@ -27,3 +27,19 @@ Ubuntu
    .. code-block:: bash
       
       pip install mayavi -U
+
+Running the simulation
+======================
+
+- Start the Carla server:
+
+   .. code-block:: bash
+      
+      ./CarlaUE4.sh
+
+- Start the simulation:
+   
+      .. code-block:: bash
+         
+         python3 carla_visualization.py
+         # or ./carla_visualization.py
