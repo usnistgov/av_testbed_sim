@@ -11,7 +11,7 @@ Carla
 
 Follow the instructions on the `Carla website <https://carla.readthedocs.io/en/latest/start_quickstart/>`_.
 
-- Use the Debian installation
+- Official `Carla documentation <https://carla.readthedocs.io/en/latest/>`_
 
 Mayavi
 ------
